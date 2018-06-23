@@ -41,13 +41,29 @@ class UserCards extends StatelessWidget {
   List<Widget> _getData(AsyncSnapshot snapshot) {
     List<Widget> cards = List<Widget>();
 
+
     List<UserTimer> data = snapshot.data;
 
     Iterator it = data.iterator;
     while(it.moveNext()) {
       UserTimer user =  it.current;
 
-      
+      Card card = new Card(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Column(
+              children: <Widget>[
+                new Container(
+                    child: new Image.network(user.user.photo)
+                ),
+
+              ],
+            )
+          ],
+        ),
+      );
+      cards.add(card);
     }
 
     return cards;
