@@ -22,3 +22,6 @@ The problem is similar to counting working hours.
 6. I choose to deal with weekly problem later;
 7. Developed interface;
 8. Attack the weekly problem;  
+
+## Sample
+![image](https://i.imgur.com/3tG4yoy.png)
