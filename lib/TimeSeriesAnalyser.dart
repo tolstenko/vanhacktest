@@ -14,6 +14,8 @@ import 'Location.dart';
 class UserTimer {
   User user;
 
+  int totalRegularTime=0;
+  int totalDailyOverTime=0;
   // monthly map of total work in a month. key is month, value is time
   Map<int,int> regularTime;
 
@@ -39,13 +41,23 @@ class UserTimer {
 
         // calculate
         var workedMins = punch.clockedOut.difference(punch.clockedIn).inMinutes;
+        if(workedMins<0)
+          continue;
+
         if(workedMins > loc.labourSettings.dailyOvertimeThreshold)
         {
-          this.daylyOverTime[punch.clockedIn.month] = this.daylyOverTime[punch.clockedIn.month] + workedMins - loc.labourSettings.dailyOvertimeThreshold;
+          var deltaTotalDailyOvertime =  workedMins - loc.labourSettings.dailyOvertimeThreshold;
+
+          this.totalDailyOverTime += deltaTotalDailyOvertime;
+          this.totalRegularTime += loc.labourSettings.dailyOvertimeThreshold;
+
+          this.daylyOverTime[punch.clockedIn.month] = this.daylyOverTime[punch.clockedIn.month] + deltaTotalDailyOvertime;
           this.regularTime[punch.clockedIn.month] = this.regularTime[punch.clockedIn.month] + loc.labourSettings.dailyOvertimeThreshold;
         }
-        else
+        else {
           this.regularTime[punch.clockedIn.month] += workedMins;
+          this.totalRegularTime += workedMins;
+        }
       }
     }
   }

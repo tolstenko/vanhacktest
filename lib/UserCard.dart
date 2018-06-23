@@ -57,7 +57,8 @@ class UserCards extends StatelessWidget {
                 new Container(
                     child: new Image.network(user.user.photo)
                 ),
-
+                new Text("TotalRegularHours: " + (user.totalRegularTime/60).round().toString()),
+                new Text("TotalOverTimeHours: " + (user.totalDailyOverTime/60).round().toString()),
               ],
             )
           ],
