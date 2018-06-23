@@ -7,26 +7,20 @@ import 'Punch.dart';
 import 'User.dart';
 import 'Location.dart';
 import 'TimeSeriesAnalyser.dart';
+import 'UserCard.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
+
+  List<UserTimer> timers = List<UserTimer>();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
-    fetchData();
-    fetchLocations().then((locs) {
-      my_locations = locs;
-    });
 
-    fetchUsers().then((users) {
-      my_locusers = users;
-    });
 
-    fetchTimePunches().then((times) {
-      my_timePunches = times;
-    });
 
     return new MaterialApp(
       title: 'Flutter Demo',
@@ -65,18 +59,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,74 +74,13 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: new UserCards(),
+//      floatingActionButton: new FloatingActionButton(
+//        onPressed: _incrementCounter,
+//        tooltip: 'Increment',
+//        child: new Icon(Icons.add),
+//      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
 
-List<UserTimer> timers;
-
-Future fetchData() async {
-  print("fetching locations");
-  await fetchLocations();
-  print("fetching users");
-  await fetchUsers();
-  print("fetching times");
-  await fetchTimePunches();
-
-  timers = List<UserTimer>();
-
-  // for each location
-  Iterator locit = my_locusers.data.keys.iterator;
-  while(locit.moveNext()) {
-    var loc = locit.current;
-    var locusers = my_locusers.data[loc];
-
-    // foreach user
-    Iterator usrit = locusers.data.keys.iterator;
-    while(usrit.moveNext()) {
-      var userid = usrit.current;
-      var usr = locusers.data[userid];
-
-      UserTimer pocessedUser = UserTimer();
-      pocessedUser.process(usr, my_timePunches, my_locations.data[loc]);
-
-      timers.add(pocessedUser);
-    }
-  }
-
-  print(timers);
-}
